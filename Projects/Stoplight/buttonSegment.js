@@ -112,11 +112,11 @@ patternPreRender[0] = noPatternPreRender
 export function beforeRender(delta) {
   ReadButtons()
 
-  // if (buttonThreeToggle) {
+  if (buttonThreeToggle) {
     patternPreRender[1](delta)
-  // } else {
-  //   patternPreRender[0](delta)
-  // }
+  } else {
+    patternPreRender[0](delta)
+  }
 }
 
 export function render(index) {
@@ -131,24 +131,18 @@ export function render(index) {
   if (buttonTwoToggle > 0) {
       if (index < 8) {
         hsv(.8,1,1)
-      // } else {
-      //   hsv(0,0,0)
       }
   }
   
   if (buttonOneToggle > 0) {
       if (index >= 8 && index < 16) {
         hsv(.5,1,1)
-      // } else {
-      //   hsv(0,0,0)
       }
   }
   
   if (buttonZeroToggle > 0) {
       if (index >= 16 && index < 24) {
         hsv(.3,1,1)
-      // } else {
-      //   hsv(0,0,0)
       }
   }
   
