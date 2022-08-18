@@ -68,60 +68,48 @@ function ReadButtons() {
 }
 
 
+var t1
+var t2
 
+var patternRender = array(1)
+var patternPreRender = array(1)
 
-export function beforeRender(delta) {
-  ReadButtons()
-
-
-  t1 = time(.50) * PI2 
-  t2 = time(.15) * PI2 // 3.33 times faster than t1
-
-}
-
-export function render(index) {
-
-    // Do Pattern
+function colorShiftRender(index) {
     h = sin(index / 3 + PI2 * sin(index / 2 + t1))
     v = wave(index / 3 / PI2 + sin(index / 2 + t2))
     v = v * v * v * v // Gamma correction
     v = v > .1 ? v : 0
     hsv(h, 1, v)
+}
+patternRender[0] = colorShiftRender
+
+function colorShiftPreRender(delta) {
+  t1 = time(.50) * PI2 
+  t2 = time(.15) * PI2 // 3.33 times faster than t1
+}
+patternPreRender[0] = colorShiftPreRender
 
 
-    // Override
-    if (buttonZeroToggle > 0) {
-        if (index == 0) {
-            hsv(.5,1,1)
-        }
-    }
- 
-   if (buttonOneToggle > 0) {
-        if (index == 1) {
-            hsv(.5,1,1)
-        }
-    }
 
-    if (buttonTwoToggle > 0) {
-        if (index == 2) {
-            hsv(.5,1,1)
-        }
-    }
- 
-    if (buttonThreeToggle > 0) {
-        if (index == 3) {
-            hsv(.7,1,1)
-        }
-    }
- 
-    if (buttonFourToggle > 0) {
-        if (index == 4) {
-            hsv(.3,1,1)
-        }
-    }
- 
- 
- 
+export function beforeRender(delta) {
+  ReadButtons()
+
+  patternPreRender[0](delta)
+}
+
+export function render(index) {
+
+  if (buttonOneToggle) {
+    patternRender[0](index)
+  }
+
+
+  // Override
+  if (buttonTwoToggle > 0) {
+      if (index == 2) {
+        hsv(.5,1,1)
+      }
+  }
     
 
 }
