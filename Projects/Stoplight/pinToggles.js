@@ -17,12 +17,75 @@ pinMode(BUTTON_TWO_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_THREE_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_FOUR_PIN, INPUT_PULLDOWN)
 
-export function beforeRender(delta) {
+
+
+
+
+export var buttonZero, buttonZeroToggle
+export var buttonOne, buttonOneToggle
+export var buttonTwo, buttonTwoToggle
+export var buttonThree, buttonThreeToggle
+export var buttonFour, buttonFourToggle
+
+var buttonZeroPressed, buttonOnePressed, buttonTwoPressed, buttonThreePressed, buttonFourPressed
+
+
+function ReadButtons() {
   buttonZero = digitalRead(BUTTON_ZERO_PIN)
+  if (buttonZero == 1) {
+    if (buttonZeroPressed == 0) {
+      buttonZeroPressed = 1
+      buttonZeroToggle = (buttonZeroToggle == 0) ? 1 : 0
+    }
+  } else {
+    buttonZeroPressed = 0
+  }  
+  
   buttonOne = digitalRead(BUTTON_ONE_PIN)
+  if (buttonOne == 1) {
+    if (buttonOnePressed == 0) {
+      buttonOnePressed = 1
+      buttonOneToggle = (buttonOneToggle == 0) ? 1 : 0
+    }
+  } else {
+    buttonOnePressed = 0
+  }    
+  
   buttonTwo = digitalRead(BUTTON_TWO_PIN)
+  if (buttonTwo == 1) {
+    if (buttonTwoPressed == 0) {
+      buttonTwoPressed = 1
+      buttonTwoToggle = (buttonTwoToggle == 0) ? 1 : 0
+    }
+  } else {
+    buttonTwoPressed = 0
+  }  
+  
   buttonThree = digitalRead(BUTTON_THREE_PIN)
+  if (buttonThree == 1) {
+    if (buttonThreePressed == 0) {
+      buttonThreePressed = 1
+      buttonThreeToggle = (buttonThreeToggle == 0) ? 1 : 0
+    }
+  } else {
+    buttonThreePressed = 0
+  }
+  
   buttonFour = digitalRead(BUTTON_FOUR_PIN)
+  if (buttonFour == 1) {
+    if (buttonFourPressed == 0) {
+      buttonFourPressed = 1
+      buttonFourToggle = (buttonFourToggle == 0) ? 1 : 0
+    }
+  } else {
+    buttonFourPressed = 0
+  }  
+}
+
+
+
+export function beforeRender(delta) {
+  ReadButtons()
 }
 
 export function render(index) {
