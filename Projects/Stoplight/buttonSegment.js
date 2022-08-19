@@ -3,6 +3,8 @@ var BUTTON_ONE_PIN = 21
 var BUTTON_TWO_PIN = 22
 var BUTTON_THREE_PIN = 25
 var BUTTON_FOUR_PIN = 26
+var BUTTON_FIVE_PIN = 27
+var BUTTON_SIX_PIN = 33
 
 pinMode(BUTTON_ZERO_PIN, INPUT_PULLDOWN)
 
@@ -11,8 +13,10 @@ export var buttonOne, buttonOneToggle
 export var buttonTwo, buttonTwoToggle
 export var buttonThree, buttonThreeToggle
 export var buttonFour, buttonFourToggle
+export var buttonFive, buttonFiveToggle
+export var buttonSix, buttonSixToggle
 
-var buttonZeroPressed, buttonOnePressed, buttonTwoPressed, buttonThreePressed, buttonFourPressed
+var buttonZeroPressed, buttonOnePressed, buttonTwoPressed, buttonThreePressed, buttonFourPressed, buttonFivePressed, buttonSixPressed
 
 
 function ReadButtons() {
@@ -65,6 +69,26 @@ function ReadButtons() {
   } else {
     buttonFourPressed = 0
   }  
+    
+  buttonFive = digitalRead(BUTTON_FIVE_PIN)
+  if (buttonFive == 1) {
+    if (buttonFivePressed == 0) {
+      buttonFivePressed = 1
+      buttonFiveToggle = (buttonFiveToggle == 0) ? 1 : 0
+    }
+  } else {
+    buttonFivePressed = 0
+  }  
+    
+  buttonSix = digitalRead(BUTTON_SIX_PIN)
+  if (buttonSix == 1) {
+    if (buttonSixPressed == 0) {
+      buttonSixPressed = 1
+      buttonSixToggle = (buttonSixToggle == 0) ? 1 : 0
+    }
+  } else {
+    buttonSixPressed = 0
+  }  
 }
 
 
@@ -112,7 +136,7 @@ patternPreRender[0] = noPatternPreRender
 export function beforeRender(delta) {
   ReadButtons()
 
-  if (buttonThreeToggle) {
+  if (buttonSixToggle) {
     patternPreRender[1](delta)
   } else {
     patternPreRender[0](delta)
@@ -121,32 +145,40 @@ export function beforeRender(delta) {
 
 export function render(index) {
 
-  if (buttonThreeToggle) {
+  if (buttonSixToggle) {
     patternRender[1](index)
   } else {
     patternRender[0](index)
   }
 
 
-  if (buttonTwoToggle > 0) {
+  if (buttonZeroPressed > 0) {
       if (index < 8) {
         hsv(.8,1,1)
       }
   }
   
-  if (buttonOneToggle > 0) {
+  if (buttonOnePressed > 0) {
       if (index >= 8 && index < 16) {
         hsv(.5,1,1)
       }
   }
   
-  if (buttonZeroToggle > 0) {
+  if (buttonTwoPressed > 0) {
       if (index >= 16 && index < 24) {
         hsv(.3,1,1)
       }
   }
   
-  
+  if (buttonThreePressed > 0) {
+        hsv(.8,1,1)
+  }
+  if (buttonFourPressed > 0) {
+        hsv(.5,1,1)
+  }
+  if (buttonFivePressed > 0) {
+        hsv(.3,1,1)
+  }
   
     
 

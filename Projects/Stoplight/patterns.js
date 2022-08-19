@@ -44,7 +44,7 @@ Color/Pattern/placement Sequence
 //// Standard pattern - Swirly?
 //// Standard pattern - Chill
 //// Standard pattern - Chill / Low power usage
-
+//// Standard pattern -  ???
 
 //- ?? How to return to default pattern??
 
