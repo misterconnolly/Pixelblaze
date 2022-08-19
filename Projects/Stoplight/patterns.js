@@ -1,11 +1,13 @@
-Base Patttern..  Toggle RYG
+Toggle RYG
+Hold RYG
+
+Base Patttern..  Hold RYG
+Base Pattern
 Base Patttern..  Toggle RYG (Base pattern persists)
 
 Base Pattern.. Hold RYG
 Base Pattern.. Hold RYG (Base pattern persists)
 
-Toggle RYG
-Hold RYG
 
 RYG Standard Sequence
 RYG Standard Sequence (Press to change/hold)
@@ -15,6 +17,36 @@ RYG Random time/placement sequence
 Color/Pattern/placement Sequence
 
 
+//// Interactive sequence
+// Hold A - Single RYG on when pushed. (Alows combo)
+// Hold B - ALL RYG on when pushed. (Last pushed override)
+// 
+// Toggle background pattern on/off
+// Push - Switch background pattern
+
+
+//// Interactive/RYG Sequence
+// Default - Cycle through colors on regular interval
+// Hold A - Single RYG on when pushed. Resume cycle when let go (after pause)
+// Hold B - ALL RYG on when pushed. Resume cycle when let go (after reducing to single, and  pause)
+//
+// Toggle background pattern on/off
+// Push - Switch background pattern
+
+
+//// RYG/Pattern Random color/pattern/placement
+// Hold - ALL RYG on when pushed. Resume cycle after let go
+
+
+//// Standard pattern - Spinner (2d)
+//// Standard pattern - (2d ??)
+//// Standard pattern - Swirly?
+//// Standard pattern - Swirly?
+//// Standard pattern - Chill
+//// Standard pattern - Chill / Low power usage
+
+
+//- ?? How to return to default pattern??
 
 
 
