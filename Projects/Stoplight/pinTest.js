@@ -3,6 +3,9 @@ export var buttonOne
 export var buttonTwo
 export var buttonThree
 export var buttonFour
+export var buttonFive
+export var buttonSix
+export var buttonSeven
 
 
 var BUTTON_ZERO_PIN = 14
@@ -12,6 +15,7 @@ var BUTTON_THREE_PIN = 25
 var BUTTON_FOUR_PIN = 26
 var BUTTON_FIVE_PIN = 27
 var BUTTON_SIX_PIN = 33
+var BUTTON_SEVEN_PIN = 36
 
 pinMode(BUTTON_ZERO_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_ONE_PIN, INPUT_PULLDOWN)
@@ -20,6 +24,7 @@ pinMode(BUTTON_THREE_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_FOUR_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_FIVE_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_SIX_PIN, INPUT_PULLDOWN)
+pinMode(BUTTON_SEVEN_PIN, INPUT_PULLDOWN)
 
 export function beforeRender(delta) {
   buttonZero = digitalRead(BUTTON_ZERO_PIN)
@@ -29,6 +34,7 @@ export function beforeRender(delta) {
   buttonFour = digitalRead(BUTTON_FOUR_PIN)
   buttonFive = digitalRead(BUTTON_FIVE_PIN)
   buttonSix = digitalRead(BUTTON_SIX_PIN)
+  buttonSeven = digitalRead(BUTTON_SEVEN_PIN)
 }
 
 export function render(index) {
@@ -76,6 +82,13 @@ export function render(index) {
     if (buttonSix > 0) {
       hsv(.85, 1, 1)  
     }
+    
+  } else if (index == 7) {
+    
+    if (buttonSeven > 0) {
+      hsv(.95, 1, 1)  
+    }
+    
   }
   
 
