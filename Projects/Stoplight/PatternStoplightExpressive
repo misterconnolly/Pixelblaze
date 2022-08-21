@@ -225,21 +225,21 @@ export function render(index) {
 
   // Single Red
   if (buttonZeroPressed > 0) {
-      if (index < 181) {
+      if ((index < 181) || (index >= 543 && index < 724)) {
         hsv(.8,1,1)
       }
   }
   
   // Single Yellow
   if (buttonOnePressed > 0) {
-      if (index >= 181 && index < 362) {
+      if ((index >= 181 && index < 362) || (index >= 724 && index < 905)) {
         hsv(.5,1,1)
       }
   }
   
   // Single Green
   if (buttonTwoPressed > 0) {
-      if (index >= 362) {
+      if ((index >= 362 && index < 543) || (index >= 905)) {
         hsv(.3,1,1)
       }
   }
@@ -255,8 +255,6 @@ export function render(index) {
   // All Green
   if (buttonFivePressed > 0) {
         hsv(.3,1,1)
-  }
-  
-    
+  }   
 
 }
