@@ -1,11 +1,13 @@
-var BUTTON_ZERO_PIN = 14
+// 1086 pixels
+
+var BUTTON_ZERO_PIN = 22
 var BUTTON_ONE_PIN = 21
-var BUTTON_TWO_PIN = 22
-var BUTTON_THREE_PIN = 25
-var BUTTON_FOUR_PIN = 26
-var BUTTON_FIVE_PIN = 27
-var BUTTON_SIX_PIN = 33
-var BUTTON_SEVEN_PIN = 36
+var BUTTON_TWO_PIN = 14
+var BUTTON_THREE_PIN = 36
+var BUTTON_FOUR_PIN = 25
+var BUTTON_FIVE_PIN = 26
+var BUTTON_SIX_PIN = 27
+var BUTTON_SEVEN_PIN = 33
 
 pinMode(BUTTON_ZERO_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_ONE_PIN, INPUT_PULLDOWN)
@@ -226,7 +228,7 @@ export function render(index) {
   // Single Red
   if (buttonZeroPressed > 0) {
       if ((index < 181) || (index >= 543 && index < 724)) {
-        hsv(.8,1,1)
+        hsv(.67,1,1)
       }
   }
   
@@ -246,7 +248,7 @@ export function render(index) {
   
   // All Red
   if (buttonThreePressed > 0) {
-        hsv(.8,1,1)
+        hsv(.67,1,1)
   }
   // All Yellow
   if (buttonFourPressed > 0) {
@@ -255,6 +257,6 @@ export function render(index) {
   // All Green
   if (buttonFivePressed > 0) {
         hsv(.3,1,1)
-  }   
+  }    
 
 }
