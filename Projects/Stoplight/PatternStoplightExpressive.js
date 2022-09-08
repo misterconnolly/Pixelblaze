@@ -9,6 +9,7 @@ var BUTTON_FIVE_PIN = 26
 var BUTTON_SIX_PIN = 27
 var BUTTON_SEVEN_PIN = 33
 
+// Assign the pin address for each button
 pinMode(BUTTON_ZERO_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_ONE_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_TWO_PIN, INPUT_PULLDOWN)
@@ -18,24 +19,36 @@ pinMode(BUTTON_FIVE_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_SIX_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_SEVEN_PIN, INPUT_PULLDOWN)
 
-export var buttonZero, buttonZeroToggle
-export var buttonOne, buttonOneToggle
-export var buttonTwo, buttonTwoToggle
-export var buttonThree, buttonThreeToggle
-export var buttonFour, buttonFourToggle
-export var buttonFive, buttonFiveToggle
+// Export button values so they can be watched on the Edit page
+export var buttonZero
+export var buttonOne
+export var buttonTwo
+export var buttonThree
+export var buttonFour
+export var buttonFive
 export var buttonSix, buttonSixToggle
 export var buttonSeven, buttonSevenToggle
 
 var buttonZeroPressed, buttonOnePressed, buttonTwoPressed, buttonThreePressed, buttonFourPressed, buttonFivePressed, buttonSixPressed, buttonSevenPressed
 
+var t1, t2
 
-function ReadButtons() {
+var PATTERN_COUNT = 3
+var patternRender = array(PATTERN_COUNT)
+var patternPreRender = array(PATTERN_COUNT)
+var PATTERN_DEFAULT = 0
+
+var buttonSixPreviousToggleState
+var buttonSevenPreviousToggleState
+var patternCurrent = 1
+var patternOn = 0
+
+
+function readButtons() {
   buttonZero = digitalRead(BUTTON_ZERO_PIN)
   if (buttonZero == 1) {
     if (buttonZeroPressed == 0) {
       buttonZeroPressed = 1
-      buttonZeroToggle = (buttonZeroToggle == 0) ? 1 : 0
     }
   } else {
     buttonZeroPressed = 0
@@ -45,7 +58,6 @@ function ReadButtons() {
   if (buttonOne == 1) {
     if (buttonOnePressed == 0) {
       buttonOnePressed = 1
-      buttonOneToggle = (buttonOneToggle == 0) ? 1 : 0
     }
   } else {
     buttonOnePressed = 0
@@ -55,7 +67,6 @@ function ReadButtons() {
   if (buttonTwo == 1) {
     if (buttonTwoPressed == 0) {
       buttonTwoPressed = 1
-      buttonTwoToggle = (buttonTwoToggle == 0) ? 1 : 0
     }
   } else {
     buttonTwoPressed = 0
@@ -65,7 +76,6 @@ function ReadButtons() {
   if (buttonThree == 1) {
     if (buttonThreePressed == 0) {
       buttonThreePressed = 1
-      buttonThreeToggle = (buttonThreeToggle == 0) ? 1 : 0
     }
   } else {
     buttonThreePressed = 0
@@ -75,7 +85,6 @@ function ReadButtons() {
   if (buttonFour == 1) {
     if (buttonFourPressed == 0) {
       buttonFourPressed = 1
-      buttonFourToggle = (buttonFourToggle == 0) ? 1 : 0
     }
   } else {
     buttonFourPressed = 0
@@ -85,7 +94,6 @@ function ReadButtons() {
   if (buttonFive == 1) {
     if (buttonFivePressed == 0) {
       buttonFivePressed = 1
-      buttonFiveToggle = (buttonFiveToggle == 0) ? 1 : 0
     }
   } else {
     buttonFivePressed = 0
@@ -114,7 +122,7 @@ function ReadButtons() {
  
 
 
-function GetPattern() {
+function getCurrentBackgroundPattern() {
   
   if (buttonSevenToggle != buttonSevenPreviousToggleState) {
     buttonSevenPreviousToggleState = buttonSevenToggle
@@ -124,7 +132,7 @@ function GetPattern() {
   if (buttonSixToggle != buttonSixPreviousToggleState) {
     buttonSixPreviousToggleState = buttonSixToggle 
     patternCurrent++
-    if (patternCurrent >= patternCount) {
+    if (patternCurrent >= PATTERN_COUNT) {
       patternCurrent = 1
     }
     patternOn = 1
@@ -134,31 +142,23 @@ function GetPattern() {
 }
 
 
-function InitializePreRender(delta) {
+function initializeBackgroundPattern(delta) {
   if (patternOn == 1) {
     patternPreRender[patternCurrent](delta)
   } else {
-    patternPreRender[patternDefault](delta)
+    patternPreRender[PATTERN_DEFAULT](delta)
   }
 }
 
-function InitializeRender(index){
+function renderBackgroundPattern(index){
   if (patternOn == 1) {
     patternRender[patternCurrent](index)
   } else {
-    patternRender[patternDefault](index)
+    patternRender[PATTERN_DEFAULT](index)
   }
 }
 
 
-
-var t1
-var t2
-
-var patternCount = 3
-var patternRender = array(patternCount)
-var patternPreRender = array(patternCount)
-var patternDefault = 0
 
 
 
@@ -208,55 +208,76 @@ patternPreRender[0] = noPatternPreRender
 
 
 
-var buttonSixPreviousToggleState
-var buttonSevenPreviousToggleState
-var patternCurrent = 1
-var patternOn = 0
 
 export function beforeRender(delta) {
-  ReadButtons()
+  readButtons()
 
-  GetPattern()
+  getCurrentBackgroundPattern()
 
-  InitializePreRender(delta)
+  initializeBackgroundPattern(delta)
 }
+
+
+
+
+function renderSingleRed(index) {
+    if ((index < 181) || (index >= 543 && index < 724)) {
+        hsv(.67,1,1)
+    }
+}
+
+function renderSingleYellow(index) {
+    if ((index >= 181 && index < 362) || (index >= 724 && index < 905)) {
+        hsv(.5,1,1)
+    }
+}
+
+function renderSingleGreen(index) {
+    if ((index >= 362 && index < 543) || (index >= 905)) {
+        hsv(.3,1,1)
+      }
+}
+
+function renderAllRed(index) { 
+    hsv(.67,1,1)
+}
+
+function renderAllYellow(index) {
+    hsv(.5,1,1)
+}
+
+function renderAllGreen(index) {
+    hsv(.3,1,1)
+}
+
+
 
 export function render(index) {
 
-  InitializeRender(index)
+  renderBackgroundPattern(index)
 
-  // Single Red
   if (buttonZeroPressed > 0) {
-      if ((index < 181) || (index >= 543 && index < 724)) {
-        hsv(.67,1,1)
-      }
+    renderSingleRed(index)
   }
   
-  // Single Yellow
   if (buttonOnePressed > 0) {
-      if ((index >= 181 && index < 362) || (index >= 724 && index < 905)) {
-        hsv(.5,1,1)
-      }
+    renderSingleYellow(index)
   }
   
-  // Single Green
   if (buttonTwoPressed > 0) {
-      if ((index >= 362 && index < 543) || (index >= 905)) {
-        hsv(.3,1,1)
-      }
+    renderSingleGreen(index)
   }
   
-  // All Red
   if (buttonThreePressed > 0) {
-        hsv(.67,1,1)
+   renderAllRed(index) 
   }
-  // All Yellow
+
   if (buttonFourPressed > 0) {
-        hsv(.5,1,1)
+    renderAllYellow(index)
   }
-  // All Green
+
   if (buttonFivePressed > 0) {
-        hsv(.3,1,1)
+    renderAllGreen(index)
   }    
 
 }
