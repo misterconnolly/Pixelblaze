@@ -1,12 +1,12 @@
 
 // 1086 pixels
 
-var BUTTON_ZERO_PIN = 22
-var BUTTON_ONE_PIN = 21
-var BUTTON_TWO_PIN = 14
-var BUTTON_THREE_PIN = 36
-var BUTTON_FOUR_PIN = 25
-var BUTTON_FIVE_PIN = 26
+var BUTTON_ZERO_PIN = 26
+var BUTTON_ONE_PIN = 25
+var BUTTON_TWO_PIN = 36
+var BUTTON_THREE_PIN = 14
+var BUTTON_FOUR_PIN = 21
+var BUTTON_FIVE_PIN = 22
 var BUTTON_SIX_PIN = 27
 var BUTTON_SEVEN_PIN = 33
 
@@ -21,14 +21,8 @@ pinMode(BUTTON_SIX_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_SEVEN_PIN, INPUT_PULLDOWN)
 
 // Export button values so they can be watched on the Edit page
-var buttonZero
-var buttonOne
-var buttonTwo
-var buttonThree
-var buttonFour
-var buttonFive
-var buttonSix, buttonSixToggle
-var buttonSeven, buttonSevenToggle
+export var buttonZero, buttonOne, buttonTwo, buttonThree, buttonFour, buttonFive, buttonSix, buttonSeven
+export var buttonSixToggle, buttonSevenToggle
 
 var buttonZeroPressed, buttonOnePressed, buttonTwoPressed, buttonThreePressed, buttonFourPressed, buttonFivePressed, buttonSixPressed, buttonSevenPressed
 
@@ -44,8 +38,8 @@ var PATTERN_INDEX_NONE = 0
 var patternRender = array(PATTERN_COUNT)
 var patternPreRender = array(PATTERN_COUNT)
 
-export var patternCurrent = PATTERN_INDEX_DEFAULT
-export var patternOn = 0
+var patternCurrent = PATTERN_INDEX_DEFAULT
+var patternOn = 0
 
 
 
@@ -257,11 +251,11 @@ export function beforeRender(delta) {
 
 
 function setPixelRed() {
-    hsv(.67,1,1)
+    hsv(.97,1,1)
 }
 
 function setPixelYellow() {
-    hsv(.5,1,1)
+    hsv(.15,1,1)
 }
 
 function setPixelGreen() {
@@ -315,7 +309,7 @@ export function render(index) {
   renderBackgroundPattern(index)
 
   if (buttonZeroPressed > 0) {
-    renderSingleRed(index)
+    renderSingleGreen(index)
   }
   
   if (buttonOnePressed > 0) {
@@ -323,11 +317,11 @@ export function render(index) {
   }
   
   if (buttonTwoPressed > 0) {
-    renderSingleGreen(index)
+    renderSingleRed(index)
   }
   
   if (buttonThreePressed > 0) {
-   renderAllRed(index) 
+   renderAllGreen(index) 
   }
 
   if (buttonFourPressed > 0) {
@@ -335,7 +329,7 @@ export function render(index) {
   }
 
   if (buttonFivePressed > 0) {
-    renderAllGreen(index)
+    renderAllRed(index)
   }    
 
 }

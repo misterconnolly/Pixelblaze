@@ -9,14 +9,14 @@ export var buttonSix
 export var buttonSeven
 
 // Assign the pin address for each button
-var BUTTON_ZERO_PIN = 14
-var BUTTON_ONE_PIN = 21
-var BUTTON_TWO_PIN = 22
-var BUTTON_THREE_PIN = 25
-var BUTTON_FOUR_PIN = 26
-var BUTTON_FIVE_PIN = 27
-var BUTTON_SIX_PIN = 33
-var BUTTON_SEVEN_PIN = 36
+var BUTTON_ZERO_PIN = 26
+var BUTTON_ONE_PIN = 25
+var BUTTON_TWO_PIN = 36
+var BUTTON_THREE_PIN = 14
+var BUTTON_FOUR_PIN = 21
+var BUTTON_FIVE_PIN = 22
+var BUTTON_SIX_PIN = 27
+var BUTTON_SEVEN_PIN = 33
 
 // Initialize button pins
 pinMode(BUTTON_ZERO_PIN, INPUT_PULLDOWN)
