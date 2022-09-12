@@ -254,7 +254,7 @@ function setPixelOff() {
 
 
 function renderSingleRed(index) {
-    if ((index <= FRONT_RED_LAST_PIXEL) 
+    if ((index >= FRONT_RED_FIRST_PIXEL && index <= FRONT_RED_LAST_PIXEL) 
     || (index >= REAR_RED_FIRST_PIXEL && index <= REAR_RED_LAST_PIXEL)) {
         setPixelRed()
     }
@@ -269,7 +269,7 @@ function renderSingleYellow(index) {
 
 function renderSingleGreen(index) {
     if ((index >= FRONT_GREEN_FIRST_PIXEL && index <= FRONT_GREEN_LAST_PIXEL) 
-    || (index >= REAR_GREEN_FIRST_PIXEL)) {
+    || (index >= REAR_GREEN_FIRST_PIXEL && index <= REAR_GREEN_LAST_PIXEL)) {
         setPixelGreen()
       }
 }
