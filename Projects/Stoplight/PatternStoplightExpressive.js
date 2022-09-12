@@ -1,11 +1,3 @@
-// TODO: Button Six Toggle really doesn't make a lot of sense
-
-// TODO: patternCurrent looks like it should be initialized as 0, instead of 1
-
-// TODO: Is button value and button "pressed" both necessary?   (ex. buttonThree and buttonThreePressed)
-
-// TODO: Maybe rename button "pressed" to button "down"
-
 
 // 1086 pixels
 
@@ -29,14 +21,14 @@ pinMode(BUTTON_SIX_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_SEVEN_PIN, INPUT_PULLDOWN)
 
 // Export button values so they can be watched on the Edit page
-export var buttonZero
-export var buttonOne
-export var buttonTwo
-export var buttonThree
-export var buttonFour
-export var buttonFive
-export var buttonSix, buttonSixToggle
-export var buttonSeven, buttonSevenToggle
+var buttonZero
+var buttonOne
+var buttonTwo
+var buttonThree
+var buttonFour
+var buttonFive
+var buttonSix, buttonSixToggle
+var buttonSeven, buttonSevenToggle
 
 var buttonZeroPressed, buttonOnePressed, buttonTwoPressed, buttonThreePressed, buttonFourPressed, buttonFivePressed, buttonSixPressed, buttonSevenPressed
 
@@ -46,12 +38,14 @@ var buttonSevenPreviousToggleState
 var t1, t2
 
 var PATTERN_COUNT = 3
+var PATTERN_INDEX_DEFAULT = 1
+var PATTERN_INDEX_NONE = 0
+
 var patternRender = array(PATTERN_COUNT)
 var patternPreRender = array(PATTERN_COUNT)
-var PATTERN_DEFAULT = 0
 
-var patternCurrent = 1
-var patternOn = 0
+export var patternCurrent = PATTERN_INDEX_DEFAULT
+export var patternOn = 0
 
 
 
@@ -164,7 +158,7 @@ function readButtons() {
  
 
 
-function getCurrentBackgroundPattern() {
+function setCurrentBackgroundPattern() {
   
   if (buttonSevenToggle != buttonSevenPreviousToggleState) {
     buttonSevenPreviousToggleState = buttonSevenToggle
@@ -175,12 +169,13 @@ function getCurrentBackgroundPattern() {
     buttonSixPreviousToggleState = buttonSixToggle 
     patternCurrent++
     if (patternCurrent >= PATTERN_COUNT) {
-      patternCurrent = 1
+      patternCurrent = PATTERN_INDEX_DEFAULT
     }
     patternOn = 1
     buttonSevenToggle = 1
     buttonSevenPreviousToggleState = 1
   }
+
 }
 
 
@@ -188,7 +183,7 @@ function initializeBackgroundPattern(delta) {
   if (patternOn == 1) {
     patternPreRender[patternCurrent](delta)
   } else {
-    patternPreRender[PATTERN_DEFAULT](delta)
+    patternPreRender[PATTERN_INDEX_DEFAULT](delta)
   }
 }
 
@@ -196,7 +191,7 @@ function renderBackgroundPattern(index){
   if (patternOn == 1) {
     patternRender[patternCurrent](index)
   } else {
-    patternRender[PATTERN_DEFAULT](index)
+    patternRender[PATTERN_INDEX_NONE](index)
   }
 }
 
@@ -253,7 +248,7 @@ patternPreRender[0] = noPatternPreRender
 export function beforeRender(delta) {
   readButtons()
 
-  getCurrentBackgroundPattern()
+  setCurrentBackgroundPattern()
 
   initializeBackgroundPattern(delta)
 }
