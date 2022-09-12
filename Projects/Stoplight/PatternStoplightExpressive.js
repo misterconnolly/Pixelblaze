@@ -1,3 +1,12 @@
+// TODO: Button Six Toggle really doesn't make a lot of sense
+
+// TODO: patternCurrent looks like it should be initialized as 0, instead of 1
+
+// TODO: Is button value and button "pressed" both necessary?   (ex. buttonThree and buttonThreePressed)
+
+// TODO: Maybe rename button "pressed" to button "down"
+
+
 // 1086 pixels
 
 var BUTTON_ZERO_PIN = 22
@@ -9,7 +18,7 @@ var BUTTON_FIVE_PIN = 26
 var BUTTON_SIX_PIN = 27
 var BUTTON_SEVEN_PIN = 33
 
-// Assign the pin address for each button
+// Assign the pin address and digital inputq type for each button
 pinMode(BUTTON_ZERO_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_ONE_PIN, INPUT_PULLDOWN)
 pinMode(BUTTON_TWO_PIN, INPUT_PULLDOWN)
@@ -31,6 +40,9 @@ export var buttonSeven, buttonSevenToggle
 
 var buttonZeroPressed, buttonOnePressed, buttonTwoPressed, buttonThreePressed, buttonFourPressed, buttonFivePressed, buttonSixPressed, buttonSevenPressed
 
+var buttonSixPreviousToggleState
+var buttonSevenPreviousToggleState
+
 var t1, t2
 
 var PATTERN_COUNT = 3
@@ -38,10 +50,40 @@ var patternRender = array(PATTERN_COUNT)
 var patternPreRender = array(PATTERN_COUNT)
 var PATTERN_DEFAULT = 0
 
-var buttonSixPreviousToggleState
-var buttonSevenPreviousToggleState
 var patternCurrent = 1
 var patternOn = 0
+
+
+
+//var FRONT_RED_FIRST_PIXEL = 0
+//var FRONT_RED_LAST_PIXEL = 180
+//var REAR_RED_FIRST_PIXEL = 583
+//var REAR_RED_LAST_PIXEL = 723
+
+//var FRONT_YELLOW_FIRST_PIXEL = 181
+//var FRONT_YELLOW_LAST_PIXEL = 361
+//var REAR_YELLOW_FIRST_PIXEL = 724
+//var REAR_YELLOW_LAST_PIXEL = 904
+
+//var FRONT_GREEN_FIRST_PIXEL = 362
+//var FRONT_GREEN_LAST_PIXEL = 542
+//var REAR_GREEN_FIRST_PIXEL = 905
+//var REAR_GREEN_LAST_PIXEL = 1085
+
+var FRONT_RED_FIRST_PIXEL = 0
+var FRONT_RED_LAST_PIXEL = 2
+var REAR_RED_FIRST_PIXEL = 583
+var REAR_RED_LAST_PIXEL = 723
+
+var FRONT_YELLOW_FIRST_PIXEL = 3
+var FRONT_YELLOW_LAST_PIXEL = 5
+var REAR_YELLOW_FIRST_PIXEL = 724
+var REAR_YELLOW_LAST_PIXEL = 904
+
+var FRONT_GREEN_FIRST_PIXEL = 6
+var FRONT_GREEN_LAST_PIXEL = 8
+var REAR_GREEN_FIRST_PIXEL = 905
+var REAR_GREEN_LAST_PIXEL = 1085
 
 
 function readButtons() {
@@ -161,7 +203,6 @@ function renderBackgroundPattern(index){
 
 
 
-
 function colorTwinkleBouncePreRender(delta){
   t1 = time(.05) * PI2
 }
@@ -220,34 +261,56 @@ export function beforeRender(delta) {
 
 
 
+function setPixelRed() {
+    hsv(.67,1,1)
+}
+
+function setPixelYellow() {
+    hsv(.5,1,1)
+}
+
+function setPixelGreen() {
+    hsv(.3,1,1)
+}
+
+function setPixelOff() {
+    hsv(0,0,0)
+}
+
+
+
+
 function renderSingleRed(index) {
-    if ((index < 181) || (index >= 543 && index < 724)) {
-        hsv(.67,1,1)
+    if ((index <= FRONT_RED_LAST_PIXEL) 
+    || (index >= REAR_RED_FIRST_PIXEL && index <= REAR_RED_LAST_PIXEL)) {
+        setPixelRed()
     }
 }
 
 function renderSingleYellow(index) {
-    if ((index >= 181 && index < 362) || (index >= 724 && index < 905)) {
-        hsv(.5,1,1)
+    if ((index >= FRONT_YELLOW_FIRST_PIXEL && index <= FRONT_YELLOW_LAST_PIXEL) 
+    || (index >= REAR_YELLOW_FIRST_PIXEL && index <= REAR_YELLOW_LAST_PIXEL)) {
+        setPixelYellow()
     }
 }
 
 function renderSingleGreen(index) {
-    if ((index >= 362 && index < 543) || (index >= 905)) {
-        hsv(.3,1,1)
+    if ((index >= FRONT_GREEN_FIRST_PIXEL && index <= FRONT_GREEN_LAST_PIXEL) 
+    || (index >= REAR_GREEN_FIRST_PIXEL)) {
+        setPixelGreen()
       }
 }
 
 function renderAllRed(index) { 
-    hsv(.67,1,1)
+    setPixelRed()
 }
 
 function renderAllYellow(index) {
-    hsv(.5,1,1)
+    setPixelYellow()
 }
 
 function renderAllGreen(index) {
-    hsv(.3,1,1)
+    setPixelGreen()
 }
 
 
