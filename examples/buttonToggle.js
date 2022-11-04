@@ -1,7 +1,19 @@
+// Example of how to create a logical toggle using a momentary 
+// button connected to a DI pin.
+//
+// Each time the button is pressed, the value of 'buttonToggle'
+// alternates between 0 and 1.
+//
+// 0 == OFF
+// 1 == ON
+
 export var buttonValue, buttonPressed, buttonToggle // Use export to display value in the PixelBlaze editor
 
 var BUTTON_PIN = 1
 pinMode(BUTTON_PIN, INPUT_PULLDOWN)
+
+var TOGGLE_OFF = 0
+var TOGGLE_ON = 1
 
 export function beforeRender(delta) {
     buttonValue = digitalRead(BUTTON_PIN)
@@ -19,7 +31,7 @@ export function render(index) {
 
     hsv(.0, 0, 0)
 
-    if (buttonToggle == 1) {
+    if (buttonToggle == TOGGLE_ON) {
         hsv(.2, .1, 1) // Set color if button toggle is on
     }
 }
