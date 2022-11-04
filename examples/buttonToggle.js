@@ -1,5 +1,5 @@
 // Example of how to create a logical toggle using a momentary 
-// button connected to a DI pin.
+// button connected to a digital input (DI) pin.
 //
 // Each time the button is pressed, the value of 'buttonToggle'
 // alternates between 0 and 1.
@@ -7,7 +7,7 @@
 // 0 == OFF
 // 1 == ON
 
-export var buttonValue, buttonPressed, buttonToggle // Use export to display value in the PixelBlaze editor
+export var buttonValue, buttonPressed, buttonToggle // Use export to watch values in the PixelBlaze editor
 
 var BUTTON_PIN = 1
 pinMode(BUTTON_PIN, INPUT_PULLDOWN)

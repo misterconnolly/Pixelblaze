@@ -3,7 +3,7 @@
 // Each time the button is pressed, the value of 'buttonValue' 
 // should be 1
 
-export var buttonValue // Use export to display value in the PixelBlaze editor
+export var buttonValue // Use export to watch values in the PixelBlaze editor
 
 var BUTTON_PIN = 1
 
