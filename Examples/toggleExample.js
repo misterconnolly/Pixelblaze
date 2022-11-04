@@ -1,4 +1,4 @@
-export var buttonValue, buttonPressed, buttonToggle
+export var buttonValue, buttonPressed, buttonToggle // Use export to display value in the PixelBlaze editor
 
 var BUTTON_PIN = 1
 pinMode(BUTTON_PIN, INPUT_PULLDOWN)
@@ -20,6 +20,6 @@ export function render(index) {
     hsv(.0, 0, 0)
 
     if (buttonToggle == 1) {
-        hsv(.2, .1, 1)
+        hsv(.2, .1, 1) // Set color if button toggle is on
     }
 }

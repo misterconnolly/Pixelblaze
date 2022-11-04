@@ -43,47 +43,47 @@ export function beforeRender(delta) {
 export function render(index) {
 
   hsv(.0, 0, 0)
-  
+
   if (index == 0) {
     if (buttonZero > 0) {
       hsv(.2, .1, 1) // LED on for index 0
     }
-    
+
   } else if (index == 1) {
     if (buttonOne > 0) {
       hsv(.4, .1, 1) // LED on for index 1
     }
-    
+
   } else if (index == 2) {
     if (buttonTwo > 0) {
       hsv(.7, 1, 1) // LED on for index 2  
     }
-    
+
   } else if (index == 3) {
     if (buttonThree > 0) {
       hsv(.55, 1, 1) // LED on for index 3  
     }
-    
+
   } else if (index == 4) {
     if (buttonFour > 0) {
       hsv(.25, 1, 1) // LED on for index 4  
     }
-    
+
   } else if (index == 5) {
     if (buttonFive > 0) {
       hsv(.15, 1, 1) // LED on for index 5  
     }
-    
+
   } else if (index == 6) {
     if (buttonSix > 0) {
       hsv(.85, 1, 1) // LED on for index 6  
     }
-    
+
   } else if (index == 7) {
     if (buttonSeven > 0) {
       hsv(.95, 1, 1) // LED on for index 7  
     }
-    
-  } 
+
+  }
 
 }

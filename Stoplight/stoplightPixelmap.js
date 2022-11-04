@@ -24,7 +24,7 @@ function (pixelCount) {
             } else {
                 for (i = inwardwired; i < rings[ring] + inwardwired; i++) {
                     c = i / rings[ring] * Math.PI * 2
-  
+
                     // To change the initial start pixel location from 12 o'clock,
                     // or the spin direction (clockwise or counterclockwise)
                     // adjust +/-sign(s) (for 180 + spin) 

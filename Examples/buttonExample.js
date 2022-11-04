@@ -1,4 +1,4 @@
-export var buttonValue // Use export display value in the PixelBlaze editor
+export var buttonValue // Use export to display value in the PixelBlaze editor
 
 var BUTTON_PIN = 1
 
