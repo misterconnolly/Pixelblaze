@@ -1,5 +1,5 @@
 // Example of how to create a logical toggle using a momentary 
-// button connected to a digital input (DI) pin.
+// button connected to a GPIO pin.
 //
 // Each time the button is pressed, the value of 'buttonToggle'
 // alternates between 0 and 1.

@@ -1,4 +1,4 @@
-// Example of a momentary button connected to a digital input (DI) pin
+// Example of a momentary button connected to a GPIO pin
 //
 // Each time the button is pressed, the value of 'buttonValue' 
 // should be 1
