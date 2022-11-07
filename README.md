@@ -1,4 +1,4 @@
-Projects and examples using the ESP32 based PixelBlaze LED controller
+Projects and examples using the ESP32 based PixelBlaze addressable LED controller
 
 - [PixelBlaze](https://www.bhencke.com/pixelblaze)
 
