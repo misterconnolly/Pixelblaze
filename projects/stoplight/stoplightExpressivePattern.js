@@ -43,9 +43,8 @@ var buttonZeroPressed, buttonOnePressed, buttonTwoPressed, buttonThreePressed, b
 var buttonSixPreviousToggleState
 var buttonSevenPreviousToggleState
 
-var t1, t2
 
-var PATTERN_COUNT = 3 // Total patterns, including the blank pattern that simulates being powered off
+var PATTERN_COUNT = 3 // Total pattern count, including the blank pattern that simulates being powered off
 var PATTERN_INDEX_DEFAULT = 1
 var PATTERN_INDEX_NONE = 0
 
@@ -54,7 +53,6 @@ var patternPreRender = array(PATTERN_COUNT)
 
 var patternCurrent = PATTERN_INDEX_DEFAULT
 var patternOn = 0
-
 
 var FRONT_RED_FIRST_PIXEL = 0
 var FRONT_RED_LAST_PIXEL = 180
@@ -71,6 +69,7 @@ var FRONT_GREEN_LAST_PIXEL = 542
 var REAR_GREEN_FIRST_PIXEL = 905
 var REAR_GREEN_LAST_PIXEL = 1085
 
+var t1, t2
 
 function readButtons() {
   buttonZero = digitalRead(BUTTON_ZERO_PIN)
