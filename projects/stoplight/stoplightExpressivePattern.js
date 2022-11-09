@@ -268,7 +268,7 @@ patternRender[2] = colorTwinkleBounceRender
 // Red/Yellow/Green areas for traffic signal
 //
 function renderRedYellowGreenCircles(index) {
-  
+
   if (buttonZeroPressed > 0) {
     renderSingleGreen(index)
   }
