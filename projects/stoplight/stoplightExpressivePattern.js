@@ -1,5 +1,19 @@
-
-// 1086 pixels
+//
+// Expressive Stoplight with Background Patterns
+//
+// Configuration
+//    - Set pixel count to 1086
+//
+// Buttons Actions
+//    Zero - Single red (top)
+//    One - Single yellow (middle)
+//    Two - Single green (botton)
+//    Three - All red
+//    Four - All yellow
+//    Five - All green
+//    Six - Switch background pattern
+//    Seven - Toggle background pattern on/off
+//
 
 var BUTTON_ZERO_PIN = 26
 var BUTTON_ONE_PIN = 25
@@ -31,7 +45,7 @@ var buttonSevenPreviousToggleState
 
 var t1, t2
 
-var PATTERN_COUNT = 3
+var PATTERN_COUNT = 3 // Total patterns, including the blank pattern that simulates being powered off
 var PATTERN_INDEX_DEFAULT = 1
 var PATTERN_INDEX_NONE = 0
 
@@ -136,8 +150,11 @@ function readButtons() {
 
 
 
-function setCurrentBackgroundPattern() {
 
+
+
+
+function setCurrentBackgroundPattern() {
   if (buttonSevenToggle != buttonSevenPreviousToggleState) {
     buttonSevenPreviousToggleState = buttonSevenToggle
     patternOn = buttonSevenToggle
@@ -153,7 +170,6 @@ function setCurrentBackgroundPattern() {
     buttonSevenToggle = 1
     buttonSevenPreviousToggleState = 1
   }
-
 }
 
 
@@ -165,6 +181,9 @@ function initializeBackgroundPattern(delta) {
   }
 }
 
+//
+// Renders the default background pattern when enabled
+//
 function renderBackgroundPattern(index) {
   if (patternOn == 1) {
     patternRender[patternCurrent](index)
@@ -176,6 +195,49 @@ function renderBackgroundPattern(index) {
 
 
 
+
+//
+// Pattern - No Pattern
+//
+function noPatternRender(index) {
+  hsv(0, 0, 0)
+}
+patternRender[0] = noPatternRender
+
+function noPatternPreRender(delta) {
+
+}
+patternPreRender[0] = noPatternPreRender
+
+
+/////////////
+// Background Patterns
+//  - Displays when patternOn == 1 
+//  - Update PATTERN_COUNT if the pattern count changes
+//  - Add patterns below
+/////////////
+
+//
+// Pattern - ColorShiftRender
+//
+function colorShiftRender(index) {
+  h = sin(index / 3 + PI2 * sin(index / 2 + t1))
+  v = wave(index / 3 / PI2 + sin(index / 2 + t2))
+  v = v * v * v * v // Gamma correction
+  v = v > .1 ? v : 0
+  hsv(h, 1, v)
+}
+patternRender[1] = colorShiftRender
+
+function colorShiftPreRender(delta) {
+  t1 = time(.50) * PI2
+  t2 = time(.15) * PI2 // 3.33 times faster than t1
+}
+patternPreRender[1] = colorShiftPreRender
+
+//
+// Pattern - ColorTwinkleBounce
+//
 function colorTwinkleBouncePreRender(delta) {
   t1 = time(.05) * PI2
 }
@@ -192,47 +254,40 @@ patternRender[2] = colorTwinkleBounceRender
 
 
 
-function colorShiftRender(index) {
-  h = sin(index / 3 + PI2 * sin(index / 2 + t1))
-  v = wave(index / 3 / PI2 + sin(index / 2 + t2))
-  v = v * v * v * v // Gamma correction
-  v = v > .1 ? v : 0
-  hsv(h, 1, v)
+
+
+
+
+
+//
+// Red/Yellow/Green areas for traffic signal
+//
+function renderRedYellowGreenCircles(index) {
+  
+  if (buttonZeroPressed > 0) {
+    renderSingleGreen(index)
+  }
+
+  if (buttonOnePressed > 0) {
+    renderSingleYellow(index)
+  }
+
+  if (buttonTwoPressed > 0) {
+    renderSingleRed(index)
+  }
+
+  if (buttonThreePressed > 0) {
+    renderAllGreen(index)
+  }
+
+  if (buttonFourPressed > 0) {
+    renderAllYellow(index)
+  }
+
+  if (buttonFivePressed > 0) {
+    renderAllRed(index)
+  }
 }
-patternRender[1] = colorShiftRender
-
-function colorShiftPreRender(delta) {
-  t1 = time(.50) * PI2
-  t2 = time(.15) * PI2 // 3.33 times faster than t1
-}
-patternPreRender[1] = colorShiftPreRender
-
-
-
-function noPatternRender(index) {
-  hsv(0, 0, 0)
-}
-patternRender[0] = noPatternRender
-
-function noPatternPreRender(delta) {
-
-}
-patternPreRender[0] = noPatternPreRender
-
-
-
-
-
-export function beforeRender(delta) {
-  readButtons()
-
-  setCurrentBackgroundPattern()
-
-  initializeBackgroundPattern(delta)
-}
-
-
-
 
 function setPixelRed() {
   hsv(.97, 1, 1)
@@ -249,9 +304,6 @@ function setPixelGreen() {
 function setPixelOff() {
   hsv(0, 0, 0)
 }
-
-
-
 
 function renderSingleRed(index) {
   if ((index >= FRONT_RED_FIRST_PIXEL && index <= FRONT_RED_LAST_PIXEL)
@@ -288,32 +340,32 @@ function renderAllGreen(index) {
 
 
 
+
+
+
+//
+// This exported function is called before rendering a new frame of pixels to the strip
+//
+// https://github.com/simap/pixelblaze/blob/master/README.expressions.md#writing-patterns
+//
+export function beforeRender(delta) {
+  readButtons()
+
+  setCurrentBackgroundPattern()
+
+  initializeBackgroundPattern(delta)
+}
+
+//
+// This exported function is called for each pixel in the strip while rendering a new frame
+//
+// https://github.com/simap/pixelblaze/blob/master/README.expressions.md#writing-patterns
+//
 export function render(index) {
 
+  // Display a background pattern if enabled
   renderBackgroundPattern(index)
 
-  if (buttonZeroPressed > 0) {
-    renderSingleGreen(index)
-  }
-
-  if (buttonOnePressed > 0) {
-    renderSingleYellow(index)
-  }
-
-  if (buttonTwoPressed > 0) {
-    renderSingleRed(index)
-  }
-
-  if (buttonThreePressed > 0) {
-    renderAllGreen(index)
-  }
-
-  if (buttonFourPressed > 0) {
-    renderAllYellow(index)
-  }
-
-  if (buttonFivePressed > 0) {
-    renderAllRed(index)
-  }
-
+  // Override traffic signal area pixels when indicated by button inputs
+  renderRedYellowGreenCircles(index);
 }

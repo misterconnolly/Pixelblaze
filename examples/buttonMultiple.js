@@ -23,17 +23,17 @@ export function render(index) {
 
     if (index == 0) {
         if (buttonOneValue == 1) {
-            hsv(.97, 1, 1) // Set color if button is pressed
+            hsv(.97, 1, 1) // Red'ish
         }
     }
     if (index == 1) {
         if (buttonTwoValue == 1) {
-            hsv(.97, 1, 1) // Set color if button is pressed
+            hsv(.15, 1, 1) // Yellow'ish
         }
     }
     if (index == 2) {
         if (buttonThreeValue == 1) {
-            hsv(.97, 1, 1) // Set color if button is pressed
+            hsv(.3, 1, 1) // Green'ish
         }
     }
 }

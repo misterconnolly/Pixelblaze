@@ -20,7 +20,7 @@ export function beforeRender(delta) {
     if (buttonValue == 1) {
         if (buttonPressed == 0) {
             buttonPressed = 1
-            buttonToggle = (buttonToggle == 0) ? 1 : 0
+            buttonToggle = (buttonToggle == TOGGLE_OFF) ? TOGGLE_ON : TOGGLE_OFF
         }
     } else {
         buttonPressed = 0
