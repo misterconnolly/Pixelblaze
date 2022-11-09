@@ -43,7 +43,6 @@ var buttonZeroPressed, buttonOnePressed, buttonTwoPressed, buttonThreePressed, b
 var buttonSixPreviousToggleState
 var buttonSevenPreviousToggleState
 
-
 var PATTERN_COUNT = 3 // Total pattern count, including the blank pattern that simulates being powered off
 var PATTERN_INDEX_DEFAULT = 1
 var PATTERN_INDEX_NONE = 0
@@ -213,12 +212,19 @@ patternPreRender[0] = noPatternPreRender
 // Background Patterns
 //  - Displays when patternOn == 1 
 //  - Update PATTERN_COUNT if the pattern count changes
-//  - Add patterns below
+//  - Add more patterns below
 /////////////
+
 
 //
 // Pattern - ColorShiftRender
 //
+function colorShiftPreRender(delta) {
+  t1 = time(.50) * PI2
+  t2 = time(.15) * PI2 // 3.33 times faster than t1
+}
+patternPreRender[1] = colorShiftPreRender
+
 function colorShiftRender(index) {
   h = sin(index / 3 + PI2 * sin(index / 2 + t1))
   v = wave(index / 3 / PI2 + sin(index / 2 + t2))
@@ -228,11 +234,6 @@ function colorShiftRender(index) {
 }
 patternRender[1] = colorShiftRender
 
-function colorShiftPreRender(delta) {
-  t1 = time(.50) * PI2
-  t2 = time(.15) * PI2 // 3.33 times faster than t1
-}
-patternPreRender[1] = colorShiftPreRender
 
 //
 // Pattern - ColorTwinkleBounce
@@ -250,6 +251,11 @@ function colorTwinkleBounceRender(index) {
   hsv(h, 1, v)
 }
 patternRender[2] = colorTwinkleBounceRender
+
+
+//
+// Add more patterns here
+//
 
 
 
@@ -336,6 +342,7 @@ function renderAllYellow(index) {
 function renderAllGreen(index) {
   setPixelGreen()
 }
+
 
 
 
