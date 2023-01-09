@@ -1,43 +1,34 @@
 // Generates pixelmap for concentric rings of LEDs
 //
 // Based on https://forum.electromage.com/t/concentric-rings-circle-mapping/649
-//
 
 function (pixelCount) {
     var map = [];
 
-    // put # of pixel in each ring here, starting center outward
-    // use 0 to add an empty ring for spacing
-    var rings = [1, 8, 12, 16, 24, 32, 40, 48, 1, 8, 12, 16, 24, 32, 40, 48, 1, 8, 12, 16, 24, 32, 40, 48];
-    var numberofrings = rings.length;
+    var pixelsPerRing = [
+        1, 8, 12, 16, 24, 32, 40, 48, 
+        1, 8, 12, 16, 24, 32, 40, 48, 
+        1, 8, 12, 16, 24, 32, 40, 48,
+        1, 8, 12, 16, 24, 32, 40, 48,
+        1, 8, 12, 16, 24, 32, 40, 48,
+        1, 8, 12, 16, 24, 32, 40, 48
+    ];
 
-    var inwardwired = 0;  // if outward, set to 0
-    // it's far easier to calculate this mapping going outward, 
-    // but if lights are wired inward, we'll reverse at the end
-
-    for (ring = 0; ring < numberofrings; ring++) {
-        if (rings[ring] == 0) {
-            // no ring, just for spacing
+    for (ring = 0; ring < pixelsPerRing.length; ring++) {
+        if (pixelsPerRing[ring] == 1) {
+            map.push([0, 0]);
         } else {
-            if (rings[ring] == 1) {
-                map.push([0, 0]);
-            } else {
-                for (i = inwardwired; i < rings[ring] + inwardwired; i++) {
-                    c = i / rings[ring] * Math.PI * 2
+            for (i = 0; i < pixelsPerRing[ring]; i++) {
+                c = i / pixelsPerRing[ring] * Math.PI * 2
 
-                    // To change the initial start pixel location from 12 o'clock,
-                    // or the spin direction (clockwise or counterclockwise)
-                    // adjust +/-sign(s) (for 180 + spin) 
-                    // and/or swap sin/cos locations (for 90/270 start points)
-                    map.push([0 - Math.sin(c) * ring, 0 - Math.cos(c) * ring])
-                }
+                // To change the initial start pixel location from 12 o'clock,
+                // or the spin direction (clockwise or counterclockwise)
+                // adjust +/-sign(s) (for 180 + spin) 
+                // and/or swap sin/cos locations (for 90/270 start points)
+                map.push([0 - Math.sin(c) * ring, 0 - Math.cos(c) * ring])
             }
         }
     }
 
-    if (inwardwired) {
-        return map.reverse();  //flip the map, so pixel order runs inward
-    } else {
-        return map; // outward is correct
-    }
+    return map;
 }
