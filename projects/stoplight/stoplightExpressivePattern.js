@@ -1,58 +1,3 @@
-//
-// Expressive Stoplight with Background Patterns
-//
-// Configuration
-//    - Set pixel count to 1086
-//
-// Buttons Actions
-//    Zero - Single red (top)
-//    One - Single yellow (middle)
-//    Two - Single green (botton)
-//    Three - All red
-//    Four - All yellow
-//    Five - All green
-//    Six - Switch background pattern
-//    Seven - Toggle background pattern on/off
-//
-
-var BUTTON_ZERO_PIN = 26
-var BUTTON_ONE_PIN = 25
-var BUTTON_TWO_PIN = 36
-var BUTTON_THREE_PIN = 14
-var BUTTON_FOUR_PIN = 21
-var BUTTON_FIVE_PIN = 22
-var BUTTON_SIX_PIN = 27
-var BUTTON_SEVEN_PIN = 33
-
-// Assign the pin address and digital inputq type for each button
-pinMode(BUTTON_ZERO_PIN, INPUT_PULLDOWN)
-pinMode(BUTTON_ONE_PIN, INPUT_PULLDOWN)
-pinMode(BUTTON_TWO_PIN, INPUT_PULLDOWN)
-pinMode(BUTTON_THREE_PIN, INPUT_PULLDOWN)
-pinMode(BUTTON_FOUR_PIN, INPUT_PULLDOWN)
-pinMode(BUTTON_FIVE_PIN, INPUT_PULLDOWN)
-pinMode(BUTTON_SIX_PIN, INPUT_PULLDOWN)
-pinMode(BUTTON_SEVEN_PIN, INPUT_PULLDOWN)
-
-// Export button values so they can be watched on the Edit page
-export var buttonZero, buttonOne, buttonTwo, buttonThree, buttonFour, buttonFive, buttonSix, buttonSeven
-export var buttonSixToggle, buttonSevenToggle
-
-var buttonZeroPressed, buttonOnePressed, buttonTwoPressed, buttonThreePressed, buttonFourPressed, buttonFivePressed, buttonSixPressed, buttonSevenPressed
-
-var buttonSixPreviousToggleState
-var buttonSevenPreviousToggleState
-
-var PATTERN_COUNT = 3 // Total pattern count, including the blank pattern that simulates being powered off
-var PATTERN_INDEX_DEFAULT = 1
-var PATTERN_INDEX_NONE = 0
-
-var patternRender = array(PATTERN_COUNT)
-var patternPreRender = array(PATTERN_COUNT)
-
-var patternCurrent = PATTERN_INDEX_DEFAULT
-var patternOn = 0
-
 var FRONT_RED_FIRST_PIXEL = 0
 var FRONT_RED_LAST_PIXEL = 180
 var REAR_RED_FIRST_PIXEL = 583
@@ -68,205 +13,207 @@ var FRONT_GREEN_LAST_PIXEL = 542
 var REAR_GREEN_FIRST_PIXEL = 905
 var REAR_GREEN_LAST_PIXEL = 1085
 
-var t1, t2
+
+var BUTTON_ZERO_PIN = 26
+var BUTTON_ONE_PIN = 25
+var BUTTON_TWO_PIN = 36
+var BUTTON_THREE_PIN = 14
+var BUTTON_FOUR_PIN = 21
+var BUTTON_FIVE_PIN = 22
+var BUTTON_SIX_PIN = 27
+var BUTTON_SEVEN_PIN = 33
+
+pinMode(BUTTON_ZERO_PIN, INPUT_PULLDOWN)
+pinMode(BUTTON_ONE_PIN, INPUT_PULLDOWN)
+pinMode(BUTTON_TWO_PIN, INPUT_PULLDOWN)
+pinMode(BUTTON_THREE_PIN, INPUT_PULLDOWN)
+pinMode(BUTTON_FOUR_PIN, INPUT_PULLDOWN)
+pinMode(BUTTON_FIVE_PIN, INPUT_PULLDOWN)
+pinMode(BUTTON_SIX_PIN, INPUT_PULLDOWN)
+pinMode(BUTTON_SEVEN_PIN, INPUT_PULLDOWN)
+
+var buttonZeroPressed, buttonOnePressed, buttonTwoPressed, buttonThreePressed, buttonFourPressed, buttonFivePressed, buttonSixPressed, buttonSevenPressed
+var buttonSixToggle, buttonSevenToggle
+var buttonSixPreviousToggleState, buttonSevenPreviousToggleState
+
+
+var PATTERN_INDEX_NONE = 0
+var PATTERN_INDEX_DEFAULT = 1
+
+var PATTERN_PRERENDERER_INDEX = 0
+var PATTERN_RENDERER_INDEX = 1
+
+var patternCurrent = PATTERN_INDEX_DEFAULT
+var patternOn = false
+
+var patternTimer1, patternTimer2
+
+var pattern = new Array()
+
+
+// Pattern - No Pattern
+pattern[0] = [
+  function(delta) { hsv(0, 0, 0) },
+  function(index) {}  
+]
+
+// Pattern - ColorShiftRender
+pattern[1] = [
+  function(delta) {
+    patternTimer1 = time(.50) * PI2
+    patternTimer2 = time(.15) * PI2 // 3.33 times faster than patternTimer1
+  },
+  function(index) {
+    h = sin(index / 3 + PI2 * sin(index / 2 + patternTimer1))
+    v = wave(index / 3 / PI2 + sin(index / 2 + patternTimer2))
+    v = v * v * v * v // Gamma correction
+    v = v > .1 ? v : 0
+    hsv(h, 1, v)
+  }  
+]
+
+// Pattern - ColorTwinkleBounce
+pattern[2] = [
+  function(delta) {
+    patternTimer1 = time(.05) * PI2
+  },
+  function(index) {
+    h = 1 + sin(index / 2 + 5 * sin(patternTimer1))
+    h += time(.1)
+    v = (1 + sin(index / 2 + 5 * sin(patternTimer1))) / 2
+    v = v * v * v * v // Gamma correction
+    hsv(h, 1, v)
+  }  
+]
+
+
+
+
+
+export function beforeRender(delta) {
+
+  readButtons()
+
+  readToggleButtons()
+
+  getCurrentBackgroundPattern()
+
+  getCurrentBackgroundState()
+
+  initializeBackgroundPattern(delta)
+}
 
 function readButtons() {
-  buttonZero = digitalRead(BUTTON_ZERO_PIN)
-  if (buttonZero == 1) {
-    if (buttonZeroPressed == 0) {
-      buttonZeroPressed = 1
+  buttonZeroPressed = false
+  buttonOnePressed = false
+  buttonTwoPressed = false
+  buttonThreePressed = false
+  buttonFourPressed = false
+  buttonFivePressed = false
+
+  if (digitalRead(BUTTON_ZERO_PIN)) {
+    if (!buttonZeroPressed) {
+      buttonZeroPressed = true
     }
-  } else {
-    buttonZeroPressed = 0
   }
 
-  buttonOne = digitalRead(BUTTON_ONE_PIN)
-  if (buttonOne == 1) {
-    if (buttonOnePressed == 0) {
-      buttonOnePressed = 1
+  if (digitalRead(BUTTON_ONE_PIN)) {
+    if (!buttonOnePressed) {
+      buttonOnePressed = true
     }
-  } else {
-    buttonOnePressed = 0
   }
 
-  buttonTwo = digitalRead(BUTTON_TWO_PIN)
-  if (buttonTwo == 1) {
-    if (buttonTwoPressed == 0) {
-      buttonTwoPressed = 1
+  if (digitalRead(BUTTON_TWO_PIN)) {
+    if (!buttonTwoPressed) {
+      buttonTwoPressed = true
     }
-  } else {
-    buttonTwoPressed = 0
   }
 
-  buttonThree = digitalRead(BUTTON_THREE_PIN)
-  if (buttonThree == 1) {
-    if (buttonThreePressed == 0) {
-      buttonThreePressed = 1
+  if (digitalRead(BUTTON_THREE_PIN)) {
+    if (!buttonThreePressed) {
+      buttonThreePressed = true
     }
-  } else {
-    buttonThreePressed = 0
   }
 
-  buttonFour = digitalRead(BUTTON_FOUR_PIN)
-  if (buttonFour == 1) {
-    if (buttonFourPressed == 0) {
-      buttonFourPressed = 1
+  if (digitalRead(BUTTON_FOUR_PIN)) {
+    if (!buttonFourPressed) {
+      buttonFourPressed = true
     }
-  } else {
-    buttonFourPressed = 0
   }
 
-  buttonFive = digitalRead(BUTTON_FIVE_PIN)
-  if (buttonFive == 1) {
-    if (buttonFivePressed == 0) {
-      buttonFivePressed = 1
+  if (digitalRead(BUTTON_FIVE_PIN)) {
+    if (!buttonFivePressed) {
+      buttonFivePressed = true
     }
-  } else {
-    buttonFivePressed = 0
-  }
-
-  buttonSix = digitalRead(BUTTON_SIX_PIN)
-  if (buttonSix == 1) {
-    if (buttonSixPressed == 0) {
-      buttonSixPressed = 1
-      buttonSixToggle = (buttonSixToggle == 0) ? 1 : 0
-    }
-  } else {
-    buttonSixPressed = 0
-  }
-
-  buttonSeven = digitalRead(BUTTON_SEVEN_PIN)
-  if (buttonSeven == 1) {
-    if (buttonSevenPressed == 0) {
-      buttonSevenPressed = 1
-      buttonSevenToggle = (buttonSevenToggle == 0) ? 1 : 0
-    }
-  } else {
-    buttonSevenPressed = 0
   }
 }
 
-
-
-
-
-
-
-function setCurrentBackgroundPattern() {
-  if (buttonSevenToggle != buttonSevenPreviousToggleState) {
-    buttonSevenPreviousToggleState = buttonSevenToggle
-    patternOn = buttonSevenToggle
+function readToggleButtons() {
+  if (digitalRead(BUTTON_SIX_PIN)) {
+    if (!buttonSixPressed) {
+      buttonSixPressed = true
+      buttonSixToggle = (!buttonSixToggle) ? true : false
+    }
+  } else {
+    buttonSixPressed = false
   }
 
+  if (digitalRead(BUTTON_SEVEN_PIN)) {
+    if (!buttonSevenPressed) {
+      buttonSevenPressed = true
+      buttonSevenToggle = (!buttonSevenToggle) ? true : false
+    }
+  } else {
+    buttonSevenPressed = false
+  }
+}
+
+function getCurrentBackgroundPattern() {
   if (buttonSixToggle != buttonSixPreviousToggleState) {
     buttonSixPreviousToggleState = buttonSixToggle
     patternCurrent++
-    if (patternCurrent >= PATTERN_COUNT) {
+    if (patternCurrent >= arrayLength(patternRender)) {
       patternCurrent = PATTERN_INDEX_DEFAULT
     }
-    patternOn = 1
-    buttonSevenToggle = 1
-    buttonSevenPreviousToggleState = 1
   }
 }
 
+function getCurrentBackgroundState() {
+  if (buttonSevenToggle != buttonSevenPreviousToggleState) {
+    buttonSevenPreviousToggleState = buttonSevenToggle
+    if (buttonSevenToggle) {
+      patternOn = true
+    }
+  }  
+}
 
 function initializeBackgroundPattern(delta) {
-  if (patternOn == 1) {
-    patternPreRender[patternCurrent](delta)
+  if (patternOn) {
+    pattern[patternCurrent][PATTERN_PRERENDERER_INDEX](delta)
   } else {
-    patternPreRender[PATTERN_INDEX_DEFAULT](delta)
+    pattern[PATTERN_INDEX_NONE][PATTERN_PRERENDERER_INDEX](delta)
   }
 }
 
-//
-// Renders the default background pattern when enabled
-//
+
+
+
+
+export function render(index) {
+    
+  renderBackgroundPattern(index)
+
+  renderRedYellowGreenCircles(index);
+}
+
 function renderBackgroundPattern(index) {
-  if (patternOn == 1) {
-    patternRender[patternCurrent](index)
+  if (patternOn) {
+    pattern[patternCurrent][PATTERN_RENDERER_INDEX](index)
   } else {
-    patternRender[PATTERN_INDEX_NONE](index)
+    pattern[PATTERN_INDEX_NONE][PATTERN_RENDERER_INDEX](index)
   }
 }
 
-
-
-
-
-//
-// Pattern - No Pattern
-//
-function noPatternRender(index) {
-  hsv(0, 0, 0)
-}
-patternRender[0] = noPatternRender
-
-function noPatternPreRender(delta) {
-
-}
-patternPreRender[0] = noPatternPreRender
-
-
-/////////////
-// Background Patterns
-//  - Displays when patternOn == 1 
-//  - Update PATTERN_COUNT if the pattern count changes
-//  - Add more patterns below
-/////////////
-
-
-//
-// Pattern - ColorShiftRender
-//
-function colorShiftPreRender(delta) {
-  t1 = time(.50) * PI2
-  t2 = time(.15) * PI2 // 3.33 times faster than t1
-}
-patternPreRender[1] = colorShiftPreRender
-
-function colorShiftRender(index) {
-  h = sin(index / 3 + PI2 * sin(index / 2 + t1))
-  v = wave(index / 3 / PI2 + sin(index / 2 + t2))
-  v = v * v * v * v // Gamma correction
-  v = v > .1 ? v : 0
-  hsv(h, 1, v)
-}
-patternRender[1] = colorShiftRender
-
-
-//
-// Pattern - ColorTwinkleBounce
-//
-function colorTwinkleBouncePreRender(delta) {
-  t1 = time(.05) * PI2
-}
-patternPreRender[2] = colorTwinkleBouncePreRender
-
-function colorTwinkleBounceRender(index) {
-  h = 1 + sin(index / 2 + 5 * sin(t1))
-  h += time(.1)
-  v = (1 + sin(index / 2 + 5 * sin(t1))) / 2
-  v = v * v * v * v // Gamma correction
-  hsv(h, 1, v)
-}
-patternRender[2] = colorTwinkleBounceRender
-
-
-//
-// Add more patterns here
-//
-
-
-
-
-
-
-
-
-//
-// Red/Yellow/Green areas for traffic signal
-//
 function renderRedYellowGreenCircles(index) {
 
   if (buttonZeroPressed > 0) {
@@ -292,22 +239,6 @@ function renderRedYellowGreenCircles(index) {
   if (buttonFivePressed > 0) {
     renderAllRed(index)
   }
-}
-
-function setPixelRed() {
-  hsv(.97, 1, 1)
-}
-
-function setPixelYellow() {
-  hsv(.15, 1, 1)
-}
-
-function setPixelGreen() {
-  hsv(.3, 1, 1)
-}
-
-function setPixelOff() {
-  hsv(0, 0, 0)
 }
 
 function renderSingleRed(index) {
@@ -343,35 +274,14 @@ function renderAllGreen(index) {
   setPixelGreen()
 }
 
-
-
-
-
-
-
-//
-// This exported function is called before rendering a new frame of pixels to the strip
-//
-// https://github.com/simap/pixelblaze/blob/master/README.expressions.md#writing-patterns
-//
-export function beforeRender(delta) {
-  readButtons()
-
-  setCurrentBackgroundPattern()
-
-  initializeBackgroundPattern(delta)
+function setPixelRed() {
+  hsv(.97, 1, 1)
 }
 
-//
-// This exported function is called for each pixel in the strip while rendering a new frame
-//
-// https://github.com/simap/pixelblaze/blob/master/README.expressions.md#writing-patterns
-//
-export function render(index) {
+function setPixelYellow() {
+  hsv(.15, 1, 1)
+}
 
-  // Display a background pattern if enabled
-  renderBackgroundPattern(index)
-
-  // Override traffic signal area pixels when indicated by button inputs
-  renderRedYellowGreenCircles(index);
+function setPixelGreen() {
+  hsv(.3, 1, 1)
 }
