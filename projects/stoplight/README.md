@@ -6,7 +6,7 @@ Configuration
 Button Actions
   - Zero - Single red (top)
   - One - Single yellow (middle)
-  - Two - Single green
+  - Two - Single green (bottom)
   - Three - All red
   - Four - All yellow
   - Five - All green
